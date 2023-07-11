@@ -23,9 +23,9 @@
             </td>
             <td align="center">
                 <a href="https://github.com/AyushJ289">
-                    <img src="https://avatars.githubusercontent.com/u/137918269?v=4" width="100px;" alt="J Ayush"/>
+                    <img src="https://avatars.githubusercontent.com/u/137918269?v=4" width="100px;" alt="Ayush J"/>
                     <br />
-                    <sub><b>J Ayush</b></sub>
+                    <sub><b>Ayush J</b></sub>
                 </a>
             </td>
         </tr>
