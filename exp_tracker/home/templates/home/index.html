@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Expense Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+        }
+        
+        .header {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-evenly;
+        }
+        
+        .container > div {
+            flex-basis: 48%;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        #balance {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+        
+        .inc-exp-container {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .inc-exp-container div {
+            flex-basis: 48%;
+            text-align: center;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        
+        #list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        #list li {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        #list li.minus {
+            border-right: 5px solid red;
+        }
+        
+        #list li.plus {
+            border-right: 5px solid green;
+        }
+        
+        .form-control {
+            margin-bottom: 10px;
+        }
+        
+        .form-control label {
+            display: block;
+            font-weight: bold;
+        }
+        
+        .form-control input[type="text"],
+        .form-control input[type="number"],
+        .form-control select {
+            width: 100%;
+            padding: 8px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .btn a {
+            color: #fff;
+            text-decoration: none;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #333;
+            color: #fff;
+        }
+        
+        .logout-btn {
+            display: inline-block;
+            padding: 12px 20px;
+            background-color: #f44336;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        
+        .logout-btn:hover {
+            background-color: #e53935;
+        }
+        
+        .add-transaction-btn {
+            display: block;
+            margin: 0 auto;
+        }
+        /* ... Your previous CSS code ... */
+
+        /* Style the history list */
+        #list {
+            list-style: none;
+            padding: 0;
+            max-height: 300px; 
+            overflow-y: auto; 
+        }
+
+        #list li {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        #list li.minus {
+            border-right: 5px solid red;
+        }
+
+        #list li.plus {
+            border-right: 5px solid green;
+        }
+
+        /* ... Your remaining CSS code ... */
+        #money-plus{
+            color: rgb(63, 201, 63);
+        }
+        #money-minus{
+            color: rgb(198, 0, 0);
+        }
+
+        </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Expense Tracker</h1>
+        {% if user.is_authenticated %}
+        <h3 style="color: #f7f7f7;">{{ user }}</h3>
+        <a href="/members/signout" class="logout-btn">Log out</a>
+    </div>
+
+        >
+        <div class="container">
+            <div class="balance-form-section">
+                <div class="your-balance-section">
+                    <h4>Your Balance</h4><hr><br>
+                    <h1 id="balance">₹{{profile.balance}}</h1>
+                    <div class="inc-exp-container">
+                        <div>
+                            <h4>Income</h4>
+                            <p id="money-plus" class="money plus">+₹{{profile.income}}</p>
+                        </div>
+                        <div>
+                            <h4>Expense</h4>
+                            <p id="money-minus" class="money minus">-₹{{profile.expenses}}</p>
+                        </div>
+                    </div>
+                </div><br><hr><br><br>
+                <div class="add-transaction-section">
+                    <h3>Add new Transactions</h3><hr><br>
+                    <form id="form" method="POST">
+                        {% csrf_token %}
+                        <!-- Your form fields here -->
+                        <div class="form-control">
+                            <label for="text">Describe</label>
+                            <input type="text" required name = "text"  placeholder="Enter here...">
+                        </div>
+                        <div class="form-control">
+                            <label for="text">Amount</label>
+                            <input type="number" required name="amount"  placeholder="Enter amount...">
+                        </div>
+                        <div class="form-control">
+                            <label for="Text">Select Type</label>
+                            <select required  name="expense_type" class="form-control">
+                                <option value="income">Income</option>
+                                <option value="expense">OutGo</option>
+                            </select>
+                        </div>
+                        <button class="btn add-transaction-btn" type="submit">Add Transaction</button>
+                    </form>
+                </div>
+            </div>
+            <div class="history-section">
+                <h3>History</h3><hr><br>
+                <ul id="list" class="list">
+                    {% for expense in expenses %}
+                        {% if expense.expense_type == "income" %}
+                            <li class="plus">
+                                {{expense.name}} <span>+₹{{expense.amount}}</span>
+                            </li>
+                        {% else %}
+                            <li class="minus">
+                                {{expense.name}} <span>-₹{{expense.amount}}</span>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <a href="{% url 'login' %}">Login</a>
+    <a href="{% url 'signup' %}"></a>
+    {% endif %}
+    <div class="footer">
+        <p>End of page</p>
+    </div>
+</body>
+</html>

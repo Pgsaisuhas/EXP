@@ -1,0 +1,51 @@
+<html>
+    <head>
+        <style>
+            body{
+                text-align: center;
+            }
+            form{
+               
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                
+            }
+            label{
+                color:rgb(0, 0, 0) ;
+            }
+            .container{
+                border: 1px solid black;
+                border-radius: 10px;
+                width: 350px;
+                height: 300px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin: auto;
+                margin-top: 15%;
+            }
+        </style>
+    </head>
+{% extends 'authenticate/layout.html'%}
+{% block start %}
+    <center>
+        <div class="container">
+            <form method="POST">
+                {% csrf_token %}
+                    <label for="username">Username : </label>
+                    <input type="text" required name= "user_name">
+                    <br>
+                    <br>
+                    <label for="Password">Password &nbsp;:</label>
+                    <input type="password" required name = "password1">
+                    <br>
+                    <br>
+                    <input type="submit" value="submit">
+                    <input type="reset" value="reset">
+            </form>
+        </div>
+        <a href="signup/">SIGN UP</a>
+        <a href="/home/">GO BACK</a>
+    </center>
+{% endblock %}
+</html>
+

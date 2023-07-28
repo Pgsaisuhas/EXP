@@ -1,0 +1,68 @@
+{% extends "home/layout.html" %}
+{% block start %}
+
+<h2>Expense Tracker</h2>
+<div class="container">
+    {% for message in messages %}
+    <div class="alert alert-{{ messages.tags}} alert-dismissible fade show" role="alert">
+        <strong>Message: </strong>{{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    </div>
+    {% endfor %}
+    {% if user.is_authenticated %}
+    <h3>Hello, {{ user }}</h3>
+    <button type="submit"><a href="/members/signout">Log out</a></button>
+    <h4>Your Balance</h4>
+    <h1 id="balance">₹{{profile.balance}}</h1>
+        <div class="inc-exp-container">
+            <div>
+                <h4>Income</h4>
+                <p id="money-plus" class="money plus">+₹{{profile.income}}</p>
+            </div>
+            <div>
+                <h4>Expense</h4>
+                <p id="money-minus" class="money minus">-₹{{profile.expenses}}</p>
+            </div>
+        </div>
+        <h3>History</h3>
+        <ul id="list" class="list">
+            {% for expense in expenses %}
+            {% if expense.expense_type == "income" %}
+            <li class="plus">
+                {{expense.name}} <span>+₹{{expense.amount}}</span>
+            </li>
+            {% else %}
+            <li class="minus">
+                {{expense.name}} <span>-₹{{expense.amount}}</span>
+            </li>
+            {% endif %}
+            {% endfor %}
+        </ul>
+        <h3>Add new Tansactions</h3>
+        <form  id="form" method="POST">
+            {% csrf_token %}
+            <div class="form-control">
+                <label for="text">Text</label>
+                <input type="text" required name = "text"  placeholder="Enter here...">
+            </div>
+            <div class="form-control">
+                <label for="text">Amount</label>
+                <input type="number" required name="amount"  placeholder="Enter amount...">
+            </div>
+            <div class="form-control">
+                <label for="Text">Text</label>
+                <select required  name="expense_type" class="form-control">
+                    <option value="income">Income</option>
+                    <option value="expense">OutGo</option>
+                </select>
+            </div>
+            <button class="btn" type="submit">Add Transaction</button>
+        </form>
+        {% else %}
+        <a href="{% url 'login' %}">Login</a>
+        <a href="{% url 'signup' %}"></a>
+        {% endif %}
+
+</div>
+
+{% endblock %}
