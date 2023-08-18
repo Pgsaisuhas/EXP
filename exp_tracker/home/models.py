@@ -1,24 +1,30 @@
 from django.db import models
 from django.contrib.auth.models import User
-# Create your models here.
 
+# ? Define choices for categorizing expenses as 'income' or 'expense'.
 TYPE = (
     ('income', 'income'),
     ('expense', 'expense'),
 )
 
+#  * User Profile Model
 class Profile(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    income = models.FloatField(default=0,max_length=10)
-    expenses = models.FloatField(default=0)
-    balance = models.FloatField(default=0)
+    # ? Represents user-specific financial data.
+    
+    user = models.ForeignKey(User, on_delete=models.CASCADE)  # ! Connects user profile to a user account.
+    income = models.FloatField(default=0, max_length=10)  # ! Total income earned by the user.
+    expenses = models.FloatField(default=0)  # ! Total expenses incurred by the user.
+    balance = models.FloatField(default=0)  # ! Current balance of the user's financial account.
 
+# Expense Model
 class Expense(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    name = models.CharField(max_length=100)
-    amount  = models.FloatField()
-    expense_type = models.CharField(max_length=100, choices=TYPE)
-
+    #  * Represents a financial expense.
+    
+    user = models.ForeignKey(User, on_delete=models.CASCADE)  # ! Connects expense to a user account.
+    name = models.CharField(max_length=100)  # ! Name or description of the expense.
+    amount = models.FloatField()  # ! The monetary amount of the expense.
+    expense_type = models.CharField(max_length=100, choices=TYPE)  # ! Categorizes the expense as 'income' or 'expense'.
 
     def __str__(self):
+        # ? Returns a string representation of the expense object (its name).
         return self.name
