@@ -65,4 +65,4 @@ def signout(request):
     messages.success(request, "Logged Out Successfully!!")
     
     # * Redirect to the home page.
-    return redirect('/home')
+    return render(request, 'authenticate/signout.html')
