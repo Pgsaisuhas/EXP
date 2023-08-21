@@ -35,14 +35,14 @@ def index(request):
             profile.income += float(amount)
             with open('income.csv', 'a', newline='') as file:
                 writer = csv.writer(file)
-                field = [profile.user, amount]
+                field = [profile.user, amount, date]
                 writer.writerow(field)
         else:
             profile.expenses += float(amount)
             profile.balance -= float(amount)
             with open('expense.csv', 'a', newline='') as file:
                 writer = csv.writer(file)
-                field = [profile.user, amount]
+                field = [profile.user, amount, date]
                 writer.writerow(field)
         
         # ? Save the updated profile data.
