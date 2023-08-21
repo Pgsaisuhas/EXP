@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from . import models
+import csv
 
 # * Import required modules and functions for rendering views and interacting with models.
 
@@ -20,9 +21,10 @@ def index(request):
         text = request.POST.get('text')
         amount = request.POST.get('amount')
         expense_type = request.POST.get('expense_type')
-        
+        date = request.POST.get('date')
+
         #  * Create a new Expense object with the extracted data.
-        expense = models.Expense(name=text, amount=amount, expense_type=expense_type, user=request.user)
+        expense = models.Expense(name=text, amount=amount, expense_type=expense_type, user=request.user, date=date)
         
         # * Save the new expense to the database.
         expense.save()
@@ -31,9 +33,17 @@ def index(request):
         if expense_type == "income":
             profile.balance += float(amount)
             profile.income += float(amount)
+            with open('income.csv', 'a', newline='') as file:
+                writer = csv.writer(file)
+                field = [profile.user, amount]
+                writer.writerow(field)
         else:
             profile.expenses += float(amount)
             profile.balance -= float(amount)
+            with open('expense.csv', 'a', newline='') as file:
+                writer = csv.writer(file)
+                field = [profile.user, amount]
+                writer.writerow(field)
         
         # ? Save the updated profile data.
         profile.save()

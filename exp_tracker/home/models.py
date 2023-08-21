@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -24,6 +25,7 @@ class Expense(models.Model):
     name = models.CharField(max_length=100)  # ! Name or description of the expense.
     amount = models.FloatField()  # ! The monetary amount of the expense.
     expense_type = models.CharField(max_length=100, choices=TYPE)  # ! Categorizes the expense as 'income' or 'expense'.
+    date = models.DateField(default=timezone.now)  # ! this field is to store the date of the expense.
 
     def __str__(self):
         # ? Returns a string representation of the expense object (its name).
