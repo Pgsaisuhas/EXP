@@ -22,7 +22,7 @@ def login_user(request):
             # ! If authentication is successful, log the user in and redirect to the home page.
             login(request, user)
             usena = user.username
-            return redirect('/')
+            return redirect('/home/')
         else:
             # ! If authentication fails, display an error message and redirect back to the login page.
             messages.error(request, "Bad credentials")

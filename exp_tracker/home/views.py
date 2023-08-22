@@ -49,7 +49,7 @@ def index(request):
         profile.save()
         
         # ? Redirect the user back to the index page.
-        return redirect('/')
+        return redirect('/home/')
 
     # ? Render the 'index.html' template with the fetched data.
     return render(request, 'home/index.html', {
