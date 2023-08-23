@@ -8,5 +8,7 @@ urlpatterns = [
     path("home/", views.index, name="index"),
     
     # ! Route for the 'home' page, mapped to the 'home' view function.
-    path('', views.home, name="home")
+    path('', views.home, name="home"),
+
+    path('expenses/delete/<int:expense_id>/', views.delete_expense, name='delete_expense'),
 ]

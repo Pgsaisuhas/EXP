@@ -1,5 +1,6 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from . import models
+from .models import Expense
 import csv
 
 # * Import required modules and functions for rendering views and interacting with models.
@@ -62,3 +63,23 @@ def home(request):
     
     # * Render the 'home.html' template.
     return render(request, 'home/home.html')
+
+def delete_expense(request, expense_id):
+    expense = get_object_or_404(Expense, id=expense_id, user=request.user)
+    
+    if request.method == 'POST':
+        if 'expenseName' in request.POST and 'expenseAmount' in request.POST:
+            expense_name = request.POST['expenseName']
+            expense_amount = float(request.POST['expenseAmount'])
+            
+            if expense.expense_type == 'income':
+                request.user.profile.income -= expense_amount
+            else:
+                request.user.profile.expenses -= expense_amount
+            
+            request.user.profile.balance += expense_amount
+            request.user.profile.save()
+            
+        expense.delete()
+    
+    return redirect('/home/')  # Redirect back to the home page

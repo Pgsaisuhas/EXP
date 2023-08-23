@@ -20,7 +20,7 @@
             text-align: center;
             padding: 20px;
             display: flex;
-            justify-content: space-between;
+            justify-content:space-evenly
         }
         
         .container {
@@ -186,7 +186,7 @@
 </head>
 <body>
     <div class="header">
-        <h1>Expense Tracker</h1>
+        <h1>TraXpense</h1>
         {% if user.is_authenticated %}
         <h3 style="color: #f7f7f7;">{{ user }}</h3>
         <a href="/members/signout" class="logout-btn">Log out</a>
@@ -239,15 +239,13 @@
                 <h3>History</h3><hr><br>
                 <ul id="list" class="list">
                     {% for expense in expenses %}
-                        {% if expense.expense_type == "income" %}
-                            <li class="plus">
-                                {{expense.name}} <span>+₹{{expense.amount}}</span> {{ expense.date }}
-                            </li>
-                        {% else %}
-                            <li class="minus">
-                                {{expense.name}} <span>-₹{{expense.amount}}</span> {{ expense.date }}
-                            </li>
-                        {% endif %}
+                        <li class="{% if expense.expense_type == 'income' %}plus{% else %}minus{% endif %}">
+                            {{ expense.name }} <span>{% if expense.expense_type == 'income' %}+₹{% else %}-₹{% endif %}{{ expense.amount }}</span> {{ expense.date }}
+                            <form action="{% url 'delete_expense' expense.id %}" method="post" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="delete-button">Delete</button>
+                            </form>
+                        </li>
                     {% endfor %}
                 </ul>
             </div>
