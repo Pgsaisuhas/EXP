@@ -1,21 +1,59 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Expense Tracker</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Expense Tracker</title>
+	<link rel="stylesheet" type="text/css" href="{% static 'home/css/seo1.css' %}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
-    <div class="container">
-        <center>
-            <h1><u><i>Personal Expense Tracker</i></u></h1>
-            <br><br>
-            <hr>
-            <p>Have an account?</p>
-            <button type="submit"><a href="/members/login_user">Login</a></button>
-            <p>Have an account?</p>
-            <button type="submit"><a href="/members/signup">Sign Up</a></button>
-        </center>
-    </div>
+<header>
+	<nav>
+		<div class="logo">Tra<span>Xpense</span></div>
+		<div class="menu">
+			<a href="/">Home</a>
+			<a href="/members/login_user">Login</a>
+			<a href="/members/signup">Registration</a>
+		</div>
+	</nav>
+
+	<div class="container">
+		<div class="left">
+			<br><br><br>
+			<h1>Beware of Little Expenses <br>A<span> small leak </span>will sink A <span> Great Ship.</span></h1>
+			<br><br>
+
+			<a href="#">Read more</a>
+			<div class="icons"><br><br>
+				<i class="fa fa-github"></i>
+				<i class="fa fa-whatsapp"></i>
+				<i class="fa fa-envelope"></i>
+				<i class="fa fa-google"></i>
+			</div>
+			<!-- <div class="icons"><br><br>
+				<a href="https://github.com/your-username"><i class="fa fa-github"></i></a>
+				<a href="https://wa.me/your-phonenumber"><i class="fa fa-whatsapp"></i></a>
+				<a href="mailto:your.email@example.com"><i class="fa fa-envelope"></i></a>
+				<a href="https://plus.google.com/your-profile"><i class="fa fa-google"></i></a>
+			</div> -->
+			
+		</div>
+	
+		<style>
+			body {
+			  background-image: url("{% static 'home/img/exp1.jpg' %}");
+			  background-repeat: no-repeat;
+			  background-attachment: fixed;
+			  background-size: cover;
+			}
+			</style>	
+	</div>
+</header>
 </body>
 </html>

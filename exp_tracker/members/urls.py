@@ -5,7 +5,7 @@ from . import views
 
 urlpatterns = [
     # ! Route for user login, mapped to the 'login_user' view function.
-    path('login_user', views.login_user, name='login'),
+    path('login_user/', views.login_user, name='login'),
     
     # ! Route for user signup, mapped to the 'signup' view function.
     path('signup/', views.signup, name='signup'),
