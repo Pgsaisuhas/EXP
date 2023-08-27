@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from . import models
-from .models import Expense, Profile
+from .models import Expense, Profile, Transaction
 import csv
 
 # * Import required modules and functions for rendering views and interacting with models.
@@ -48,6 +48,14 @@ def index(request):
         
         # ? Save the updated profile data.
         profile.save()
+
+        transaction = Transaction(
+            user=request.user,
+            transaction_type=expense_type,
+            amount=amount,
+            date=date
+        )
+        transaction.save()
         
         # ? Redirect the user back to the index page.
         return redirect('/home/')
@@ -64,6 +72,27 @@ def home(request):
     # * Render the 'home.html' template.
     return render(request, 'home/home.html')
 
+# def delete_expense(request, expense_id):
+#     expense = get_object_or_404(Expense, id=expense_id, user=request.user)
+    
+#     profile = Profile.objects.filter(user=request.user).first()
+    
+#     if request.method == 'POST':
+#         expense_amount = expense.amount
+        
+#         if expense.expense_type == 'income':
+#             profile.income -= expense_amount
+#             profile.balance -= expense_amount
+#         else:
+#             profile.expenses -= expense_amount
+#             profile.balance -= expense_amount
+        
+#         profile.save()
+        
+#         expense.delete()
+    
+#     return redirect('/home/')  # Redirect back to the home page
+
 def delete_expense(request, expense_id):
     expense = get_object_or_404(Expense, id=expense_id, user=request.user)
     
@@ -71,6 +100,7 @@ def delete_expense(request, expense_id):
     
     if request.method == 'POST':
         expense_amount = expense.amount
+        transaction = Transaction.objects.filter(user=request.user, amount=expense_amount).first()
         
         if expense.expense_type == 'income':
             profile.income -= expense_amount
@@ -81,7 +111,10 @@ def delete_expense(request, expense_id):
         
         profile.save()
         
+        if transaction:
+            transaction.delete()
+        
         expense.delete()
     
-    return redirect('/home/')  # Redirect back to the home page
+    return redirect('/home/')
 

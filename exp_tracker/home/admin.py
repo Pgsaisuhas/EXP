@@ -1,6 +1,6 @@
 from django.contrib import admin
 from . import models
-from .models import Profile, Expense
+from .models import Profile, Expense, Transaction
 
 
 # * Registered 2 main models for admin panel access.
@@ -12,5 +12,4 @@ class ExpenseAdmin(admin.ModelAdmin):
 
 admin.site.register(Profile, ProfileAdmin)
 admin.site.register(Expense, ExpenseAdmin)
-# admin.site.register(models.Profile)
-# admin.site.register(models.Expense)
+admin.site.register(Transaction)
