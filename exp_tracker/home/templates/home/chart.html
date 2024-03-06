@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analytics</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    .graphs{
+        width: 600px;
+    }
+  </style>
+</head>
+<body>
+  <div class="graphs">
+    <canvas id="myChart" style="width: 400px; height: 200px;"></canvas>
+  </div>
+  <script>
+    const ctx = document.getElementById('myChart').getContext('2d');
+    
+    // Combine bar and pie chart data and configuration
+    const data = {
+      labels: ['Balance','Expenses', 'Income'],
+      datasets: [{
+        label: '',
+        data: [{{profile_balance}},{{profile_expense}}, {{profile_income}}],
+        backgroundColor: ['rgba(255, 125, 99)','rgba(255, 99, 132)', 'rgba(54, 162, 235)'],
+     
+        borderWidth: 1
+      }]
+    };
+
+    const options = {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      },
+      plugins: {
+        legend: {
+          display: true,
+          position: 'right'
+        }
+      }
+    };
+
+    new Chart(ctx, {
+      type: 'doughnut', // Changed chart type to doughnut
+      data,
+      options
+    });
+  </script>
+  
+</body>
+</html>

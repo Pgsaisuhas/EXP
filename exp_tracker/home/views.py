@@ -1,11 +1,18 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from . import models
 from .models import Expense, Profile, Transaction
+from django.db import connection
+from django.http import Http404
 import csv
-
+from django.http import JsonResponse
+import json
 # * Import required modules and functions for rendering views and interacting with models.
 
 # ? Define Views for Handling User Requests
+
+def landing(request):
+    return render(request, 'home/landingpage.html')
+
 
 def index(request):
     # * View function for the default 'index' page.
@@ -19,13 +26,16 @@ def index(request):
     # ! Check if the request method is POST (form submission).
     if request.method == 'POST':
         #  * Extract data from the POST request.
-        text = request.POST.get('text')
+        name = request.POST.get('name')
         amount = request.POST.get('amount')
-        expense_type = request.POST.get('expense_type')
+        if request.POST.get('type'):
+            expense_type = "expense"
+        else:
+            expense_type = "income"
         date = request.POST.get('date')
 
         #  * Create a new Expense object with the extracted data.
-        expense = models.Expense(name=text, amount=amount, expense_type=expense_type, user=request.user, date=date)
+        expense = models.Expense(name=name, amount=amount, expense_type=expense_type, user=request.user, date=date)
         
         # * Save the new expense to the database.
         expense.save()
@@ -48,6 +58,8 @@ def index(request):
         
         # ? Save the updated profile data.
         profile.save()
+
+
 
         transaction = Transaction(
             user=request.user,
@@ -72,26 +84,9 @@ def home(request):
     # * Render the 'home.html' template.
     return render(request, 'home/home.html')
 
-# def delete_expense(request, expense_id):
-#     expense = get_object_or_404(Expense, id=expense_id, user=request.user)
-    
-#     profile = Profile.objects.filter(user=request.user).first()
-    
-#     if request.method == 'POST':
-#         expense_amount = expense.amount
-        
-#         if expense.expense_type == 'income':
-#             profile.income -= expense_amount
-#             profile.balance -= expense_amount
-#         else:
-#             profile.expenses -= expense_amount
-#             profile.balance -= expense_amount
-        
-#         profile.save()
-        
-#         expense.delete()
-    
-#     return redirect('/home/')  # Redirect back to the home page
+
+
+
 
 def delete_expense(request, expense_id):
     expense = get_object_or_404(Expense, id=expense_id, user=request.user)
@@ -100,21 +95,80 @@ def delete_expense(request, expense_id):
     
     if request.method == 'POST':
         expense_amount = expense.amount
-        transaction = Transaction.objects.filter(user=request.user, amount=expense_amount).first()
         
         if expense.expense_type == 'income':
             profile.income -= expense_amount
             profile.balance -= expense_amount
         else:
             profile.expenses -= expense_amount
-            profile.balance -= expense_amount
+            profile.balance += expense_amount  # Add back the amount to balance
         
         profile.save()
         
+        # Delete the corresponding transaction if it exists
+        transaction = Transaction.objects.filter(user=request.user, amount=expense_amount).first()
         if transaction:
             transaction.delete()
         
         expense.delete()
     
     return redirect('/home/')
+
+
+
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def analytics(request):
+    user = request.user
+    expenses_data = expenses_over_time(user)
+    income_data = income_over_time(user)
+    profile = Profile.objects.filter(user=request.user).first()
+    combined_data = {
+        'profile_balance' : profile.balance,
+        'profile_expense' : profile.expenses,
+        'profile_income' : profile.income,
+    }
+
+    return render(request, 'home/chart.html', combined_data)
+
+def expenses_over_time(user):
+    with connection.cursor() as cursor:
+        cursor.execute("""
+            SELECT DATE(date) AS transaction_date, SUM(amount) AS total_expense
+            FROM home_transaction
+            WHERE transaction_type = 'expense' AND user_id = %s
+            GROUP BY DATE(date)
+            ORDER BY DATE(date)
+        """, [user.id])
+        rows = cursor.fetchall()
+
+    labels = []
+    data = []
+
+    for row in rows:
+        labels.append(row[0])
+        data.append(row[1])
+
+    return [labels, data]
+
+def income_over_time(user):
+    with connection.cursor() as cursor:
+        cursor.execute("""
+            SELECT DATE(date) AS transaction_date, SUM(amount) AS total_income
+            FROM home_transaction
+            WHERE transaction_type = 'income' AND user_id = %s
+            GROUP BY DATE(date)
+            ORDER BY DATE(date)
+        """, [user.id])
+        rows = cursor.fetchall()
+
+    labels = []
+    data = []
+
+    for row in rows:
+        labels.append(row[0])
+        data.append(row[1])
+
+    return [labels, data]
 

@@ -1,133 +1,56 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Expense Tracker</title>
-    <style>
+    <style>@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");
+
+        :root {
+          --bg-color: #f6f8fa;
+          --text-color: #1d1f27;
+          --main-color: #3a3dbe;
+        }
+        
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+          padding: 0;
+          margin: 0;
+          box-sizing: border-box;
         }
         
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f7f7f7;
+          padding: 2rem;
+          font-family: "Poppins", sans-serif;
+          background-color: var(--bg-color);
+          color: var(--text-color);
         }
         
-        .header {
-            background-color: #333;
-            color: #fff;
-            text-align: center;
-            padding: 20px;
-            display: flex;
-            justify-content:space-evenly
+        h1 {
+          text-align: center;
+          font-size: 1.5rem;
         }
         
-        .container {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-            display: flex;
-            justify-content: space-evenly;
+        h2 {
+          text-align: center;
+          margin-bottom: 10px;
         }
         
-        .container > div {
-            flex-basis: 48%;
-            padding: 20px;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+        h3,
+        header,
+        ul {
+          margin-bottom: 0.5rem;
         }
         
-        #balance {
-            font-size: 36px;
-            margin-bottom: 10px;
-        }
-        
-        .inc-exp-container {
+        .heading {
             display: flex;
             justify-content: space-between;
-        }
-        
-        .inc-exp-container div {
-            flex-basis: 48%;
-            text-align: center;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-        
-        #list {
-            list-style: none;
-            padding: 0;
-        }
-        
-        #list li {
-            margin-bottom: 10px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-            display: flex;
-            justify-content: space-between;
-        }
-        
-        #list li.minus {
-            border-right: 5px solid red;
-        }
-        
-        #list li.plus {
-            border-right: 5px solid green;
-        }
-        
-        .form-control {
-            margin-bottom: 10px;
-        }
-        
-        .form-control label {
-            display: block;
-            font-weight: bold;
-        }
-        
-        .form-control input[type="text"],
-        .form-control input[type="number"],
-        .form-control select {
-            width: 100%;
-            padding: 8px;
-            border: 2px solid #ddd;
-            border-radius: 5px;
-        }
-        
-        .btn {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #333;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        
-        .btn a {
-            color: #fff;
-            text-decoration: none;
-        }
-        
-        .footer {
-            text-align: center;
-            padding: 10px;
-            background-color: #333;
-            color: #fff;
-        }
-        
-        .logout-btn {
-            display: inline-block;
-            padding: 12px 20px;
+            align-items: center;
+            margin-bottom: 20px;
+          }
+          
+          .logout-btn {
+            padding: 8px 16px;
             background-color: #f44336;
             color: #fff;
             border: none;
@@ -136,130 +59,372 @@
             text-decoration: none;
             font-size: 16px;
             transition: background-color 0.3s ease;
-        }
-        
-        .logout-btn:hover {
+          }
+          
+          .logout-btn:hover {
             background-color: #e53935;
+          }
+          
+        
+        
+        .container{
+          max-width: 800px; /* Updated max-width */
+          margin: 1rem auto;
+          background-color: #fff;
+          padding: 1rem;
+          box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+          
+          display: flex;
+        }
+        .left {
+          flex: 1; /* Added flex property */
+          padding-right: 1rem; /* Added spacing */
         }
         
-        .add-transaction-btn {
-            display: block;
-            margin: 0 auto;
+        .right {
+          flex: 1; /* Added flex property */
+          padding-left: 1rem; /* Added spacing */
         }
-        /* ... Your previous CSS code ... */
+        
+        #transactionList {
+          max-height: 300px; /* Set a fixed maximum height for the list */
+          overflow-y: auto; /* Enable vertical scrolling */
+          overflow-x:hidden;
+        }
+        header {
+          background-color: var(--main-color);
+          color: #fff;
+          padding: 1rem;
+          text-align: center;
+          border-radius: 5px;
+          display: flex;
+          flex-wrap: wrap;
+        }
+        
+        header div {
+          padding: 5px;
+        }
+        
+        header div:first-child {
+          flex-basis: 100%;
+          font-size: 2.25rem;
+          font-weight: 600;
+        }
+        
+        header div:nth-child(n + 2) {
+          flex-basis: 50%;
+          font-size: 1.25rem;
+          font-weight: 500;
+        }
+        
+        header h5 {
+          font-size: 0.75rem;
+          font-weight: 600;
+          text-transform: uppercase;
+        }
+        
+        form {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 10px;
+        }
+        
+        form input:not(#type),
+        form button {
+          width: calc(100% - 22px); /* Updated width */
+          padding: 10px;
+          border: 1px solid #ddd;
+          border-radius: 5px;
+          margin-bottom: 5px;
+          height: 42px;
+          font-family: "Poppins", sans-serif;
+          font-size: 1rem;
+        }
+        
+        form button {
+          background-color: var(--main-color);
+          color: #fff;
+          font-size: 0.75rem;
+          font-weight: 600;
+          text-transform: uppercase;
+          box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        form label {
+          font-size: 0.75rem;
+          font-weight: 600;
+          text-transform: uppercase;
+        }
+        
+        form div:nth-child(-n + 2) {
+          flex-basis: 100%;
+        }
+        
+        form div:nth-child(n + 3) {
+          flex-basis: calc(50% - 5px);
+        }
+        
+        input#type {
+          appearance: none;
+          position: absolute;
+        }
+        
+        .option {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 10px;
+          background: #eee;
+          border-radius: 5px;
+          position: relative;
+        }
+        
+        .option span {
+          width: 50%;
+          text-align: center;
+          cursor: pointer;
+          z-index: 2;
+        }
+        
+        .option::before {
+          content: "";
+          position: absolute;
+          top: 5px;
+          left: 0;
+          background-color: #fff;
+          height: calc(100% - 10px);
+          width: calc(50% - 10px);
+          transform: translateX(5px);
+          border-radius: inherit;
+          box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
+          transition: all 200ms;
+        }
+        
+        input#type:checked ~ .option::before {
+          left: 50%;
+        }
+        
+        ul {
+          list-style-type: none;
+        }
+        
+        ul li {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          padding: 5px 10px;
+          position: relative;
+        }
+        
+        ul li:hover {
+          background: rgba(0, 0, 0, 0.1);
+        }
+        
+        .name {
+          flex: 1;
+        }
+        
+        .name h4 {
+          font-size: 1rem;
+          font-weight: 600;
+          text-transform: capitalize;
+        }
+        
+        .name p {
+          font-size: 0.8rem;
+          color: #555;
+        }
+        
+        .amount {
+          font-weight: 600;
+        }
+        
+        .amount.income {
+          color: yellowgreen;
+        }
+        
+        .amount.expense {
+          color: indianred;
+        }
+        
+        .action {
+          position: absolute;
+          top: 0;
+          right: 0;
+          background-color: #f00;
+          color: #fff;
+          height: 100%;
+          width: 50px;
+          display: grid;
+          place-items: center;
+          transform: scaleX(0);
+          transform-origin: right;
+          transition: all 300ms;
+        }
+        
+        ul li:hover .action {
+          transform: scaleX(1);
+        }
+        
+        .action svg {
+          width: 36px;
+          height: 36px;
+          cursor: pointer;
+        }
+        
+        #status {
+          text-align: center;
+          margin-bottom: 0.5rem;
+        }
 
-        /* Style the history list */
-        #list {
-            list-style: none;
-            padding: 0;
-            max-height: 300px; 
-            overflow-y: auto; 
+        .button {
+          background: none;
+          border: none;
+          padding: 0;
+          cursor: pointer;
+        }
+        
+        .button svg {
+          width: 36px;
+          height: 36px;
+          cursor: pointer;
+          transition: transform 0.3s ease-in-out;
+        }
+        
+        .button:hover svg {
+          transform: scale(1.1);
+        }
+        
+        .button svg path {
+          transition: stroke 0.3s ease-in-out;
+        }
+        
+        .button:hover svg path {
+          stroke: #f00;
         }
 
-        #list li {
-            margin-bottom: 10px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-            display: flex;
-            justify-content: space-between;
-        }
-
-        #list li.minus {
-            border-right: 5px solid red;
-        }
-
-        #list li.plus {
-            border-right: 5px solid green;
-        }
-
-        /* ... Your remaining CSS code ... */
-        #money-plus{
-            color: rgb(63, 201, 63);
-        }
-        #money-minus{
-            color: rgb(198, 0, 0);
-        }
-        .delete-button{
-            border: none;
-            border-radius: 5px;
-        }
+        .analytics {
+          display: inline-block;
+          padding: 10px 20px;
+          background-color: #007bff; /* Blue color */
+          color: #fff; /* White text */
+          text-decoration: none; /* Remove underline */
+          border-radius: 5px; /* Rounded corners */
+          transition: background-color 0.3s; /* Smooth color transition */
+      }
+      
+      .analytics:hover {
+          background-color: #0056b3; /* Darker blue on hover */
+      }
+      
+        
         </style>
 </head>
 <body>
-    <div class="header">
-        <h1>TraXpense</h1>
-        {% if user.is_authenticated %}
-        <h3 style="color: #f7f7f7;">{{ user }}</h3>
+    <header class="heading">
+        <h2>Welcome, {{ user }}</h2>
         <a href="/members/signout" class="logout-btn">Log out</a>
-    </div>
-        <div class="container">
-            <div class="balance-form-section">
-                <div class="your-balance-section">
-                    <h4>Your Balance</h4><hr><br>
-                    <h1 id="balance">₹{{profile.balance}}</h1>
-                    <div class="inc-exp-container">
-                        <div>
-                            <h4>Income</h4>
-                            <p id="money-plus" class="money plus">+₹{{profile.income}}</p>
-                        </div>
-                        <div>
-                            <h4>Expense</h4>
-                            <p id="money-minus" class="money minus">-₹{{profile.expenses}}</p>
-                        </div>
-                    </div>
-                </div><br><hr><br><br>
-                <div class="add-transaction-section">
-                    <h3>Add new Transactions</h3><hr><br>
-                    <form id="form" method="POST">
-                        {% csrf_token %}
-                        <!-- Your form fields here -->
-                        <div class="form-control">
-                            <label for="text">Describe</label>
-                            <input type="text" required name = "text"  placeholder="Enter here...">
-                        </div>
-                        <div class="form-control">
-                            <label for="text">Amount</label>
-                            <input type="number" required name="amount"  placeholder="Enter amount...">
-                        </div>
-                        <div class="form-control">
-                            <label for="date">Date</label>
-                            <input type="date" required name="date" placeholder="Select a date...">
-                        </div>
-                        <div class="form-control">
-                            <label for="Text">Select Type</label>
-                            <select required  name="expense_type" class="form-control">
-                                <option value="income">Income</option>
-                                <option value="expense">OutGo</option>
-                            </select>
-                        </div>
-                        <button class="btn add-transaction-btn" type="submit">Add Transaction</button>
-                    </form>
+    </header>
+
+    <h1>Finance Tracker</h1>
+
+    <main>
+      <div class="container">
+
+      
+        <div class="left">
+            <header>
+                <div>
+                    <h5>Total Balance</h5>
+                    <span id="balance">₹{{ profile.balance }}</span>
                 </div>
+                <div>
+                    <h5>Income</h5>
+                    <span id="income">₹{{ profile.income }}</span>
+                </div>
+                <div>
+                    <h5>Expense</h5>
+                    <span id="expense">₹{{ profile.expenses }}</span>
+                </div>
+            </header>
+            <div>
+                <section>
+                    <h3>Add Transaction</h3>
+
+                    <form id="transactionForm" method="POST">
+                        {% csrf_token %}
+                        <div>
+                            <label for="type">
+                              <input type="checkbox" name="type" id="type" />
+                              <div class="option">
+                                <span>Income</span>
+                                <span>Expense</span>
+                                <!-- <button>Expense</button>
+                                <button>Income</button> -->
+                              </div>
+                            </label>
+                          </div>
+                          <div>
+                            <label for="name">Name</label>
+                            <input type="text" name="name" required />
+                          </div>
+                          <div>
+                            <label for="amount">Amount</label>
+                            <input
+                              type="number"
+                              name="amount"
+                              value="0"
+                              min="0.01"
+                              step="0.01"
+                              required
+                            />
+                          </div>
+                          <div>
+                            <label for="date">Date</label>
+                            <input type="date" name="date" required />
+                          </div>
+                          <button type="submit">Submit</button>
+                        </form>
+                </section>
             </div>
-            <div class="history-section">
-                <h3>History</h3><hr><br>
-                <ul id="list" class="list">
+        </div>
+        <hr>
+        <div class="right">
+            <section>
+                <h3>Transactions</h3>
+                <ul id="transactionList">
                     {% for expense in expenses %}
-                        <li class="{% if expense.expense_type == 'income' %}plus{% else %}minus{% endif %}">
-                            {{ expense.name }} <span>{% if expense.expense_type == 'income' %}+₹{% else %}-₹{% endif %}{{ expense.amount }}</span> {{ expense.date }}
-                            <form action="{% url 'delete_expense' expense.id %}" method="post" style="display: inline;">
-                                {% csrf_token %}
-                                <button type="submit" class="delete-button">Delete</button>
-                            </form>
+                        <li>
+                            <div class="name">
+                                <h4>{{ expense.name }}</h4>
+                                <p>{{ expense.date }}</p>
+                            </div>
+                            <div class="amount {% if expense.expense_type == 'income' %}income{% else %}expense{% endif %}">
+                                {{ expense.amount }}
+                            </div>
+                            <div class="action">
+                                <form action="{% url 'delete_expense' expense.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button class="button">
+                                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                      </svg>
+                                    </button>
+                                    
+                                    
+                                </form>
+                            </div>
                         </li>
                     {% endfor %}
                 </ul>
-            </div>
+                <div id="status"></div>
+            </section>
         </div>
-    </div>
-    {% else %}
-    <a href="{% url 'login' %}">Login</a>
-    <a href="{% url 'signup' %}"></a>
-    {% endif %}
-    <div class="footer">
-        <p>End of page</p>
-    </div>
+      </div>
+       <center> <a href="/home/analytics" class="analytics">View analytics</a></center>
+    </main>
+
+    
+    
 </body>
 </html>

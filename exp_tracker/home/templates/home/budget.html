@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Budget Tracker</title>
+    <script>let budgets = [];
+
+        function addBudget() {
+            const budgetName = prompt('Enter Budget Name:');
+            if (budgetName) {
+                const newBudget = {
+                    name: budgetName,
+                    balance: 0,
+                    transactions: []
+                };
+                budgets.push(newBudget);
+                updateBudgets();
+            }
+        }
+        
+        function addTransaction(event) {
+            event.preventDefault();
+        
+            const budgetIndex = document.getElementById('budget-selector').selectedIndex - 1;
+            if (budgetIndex < 0) {
+                alert('Please select a budget.');
+                return;
+            }
+        
+            const type = document.getElementById('type').value;
+            const amount = parseFloat(document.getElementById('amount').value);
+            const category = document.getElementById('category').value;
+        
+            if (isNaN(amount)) {
+                alert('Please enter a valid amount.');
+                return;
+            }
+        
+            const budget = budgets[budgetIndex];
+        
+            const transaction = {
+                type: type,
+                amount: amount,
+                category: category
+            };
+        
+            if (type === 'expense' && budget.balance - amount < 0) {
+                alert('Exceeds budget limit.');
+                return;
+            }
+        
+            budget.transactions.push(transaction);
+            if (type === 'expense') {
+                budget.balance -= amount;
+            } else {
+                budget.balance += amount;
+            }
+            updateTransactionHistory();
+            updateBudgetInfo();
+        }
+        
+        function updateBudgets() {
+            const budgetSelector = document.getElementById('budget-selector');
+            budgetSelector.innerHTML = '<option value="">Select Budget</option>';
+        
+            budgets.forEach(budget => {
+                const option = document.createElement('option');
+                option.textContent = budget.name;
+                budgetSelector.appendChild(option);
+            });
+        }
+        
+        function updateBudgetInfo() {
+            const budgetIndex = document.getElementById('budget-selector').selectedIndex - 1;
+            if (budgetIndex < 0) return;
+        
+            const budget = budgets[budgetIndex];
+            const budgetTitle = document.getElementById('budget-title');
+            const budgetInfo = document.getElementById('budget-info');
+        
+            budgetTitle.textContent = `${budget.name}: Balance - $${budget.balance.toFixed(2)}`;
+        
+            budgetInfo.innerHTML = `<p>Budget: ${budget.name}</p>
+                                    <p>Balance: $${budget.balance.toFixed(2)}</p>
+                                    <p>Total Transactions: ${budget.transactions.length}</p>`;
+        }
+        
+        function updateTransactionHistory() {
+            const budgetIndex = document.getElementById('budget-selector').selectedIndex - 1;
+            if (budgetIndex < 0) return;
+        
+            const budget = budgets[budgetIndex];
+            const transactionList = document.getElementById('transaction-list');
+            transactionList.innerHTML = '';
+        
+            budget.transactions.forEach(transaction => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `${transaction.type.charAt(0).toUpperCase() + transaction.type.slice(1)}: $${transaction.amount} - ${transaction.category}`;
+                transactionList.appendChild(listItem);
+            });
+        }
+        </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Budget Tracker</h1>
+        <div id="budgets"></div>
+        <button onclick="addBudget()">Add Budget</button>
+        <div id="transaction-form">
+            <h2 id="budget-title"></h2>
+            <div id="budget-info"></div>
+            <form onsubmit="addTransaction(event)">
+                <div>
+                    <label for="type">Type:</label>
+                    <select id="type">
+                        <option value="expense">Expense</option>
+                        <option value="income">Income</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="amount">Amount:</label>
+                    <input type="number" id="amount" step="0.01">
+                </div>
+                <div>
+                    <label for="category">Category:</label>
+                    <input type="text" id="category">
+                </div>
+                <button type="submit">Add Transaction</button>
+            </form>
+        </div>
+        <div id="transaction-history">
+            <h2>Transaction History</h2>
+            <ul id="transaction-list"></ul>
+        </div>
+    </div>
+</body>
+</html>
