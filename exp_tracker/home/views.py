@@ -6,6 +6,7 @@ from django.http import Http404
 import csv
 from django.http import JsonResponse
 import json
+import datetime
 # * Import required modules and functions for rendering views and interacting with models.
 
 # ? Define Views for Handling User Requests
@@ -123,11 +124,20 @@ def analytics(request):
     user = request.user
     expenses_data = expenses_over_time(user)
     income_data = income_over_time(user)
+    print(expenses_data, income_data)
     profile = Profile.objects.filter(user=request.user).first()
+
+    final_dates = sorted(set(expenses_data[0] + income_data[0]))
+    print(final_dates)
     combined_data = {
-        'profile_balance' : profile.balance,
-        'profile_expense' : profile.expenses,
-        'profile_income' : profile.income,
+        'expense_dates'     : expenses_data[0],
+        'Expenses'          : expenses_data[1],
+        'income_dates'     : income_data[0],
+        'final_dates'       : final_dates,
+        'Incomes'           : income_data[1],
+        'profile_balance'   : profile.balance,
+        'profile_expense'   : profile.expenses,
+        'profile_income'    : profile.income,
     }
 
     return render(request, 'home/chart.html', combined_data)
@@ -135,7 +145,7 @@ def analytics(request):
 def expenses_over_time(user):
     with connection.cursor() as cursor:
         cursor.execute("""
-            SELECT DATE(date) AS transaction_date, SUM(amount) AS total_expense
+            SELECT DATE(date) AS transaction_date, SUM(amount) AS total_income
             FROM home_transaction
             WHERE transaction_type = 'expense' AND user_id = %s
             GROUP BY DATE(date)
@@ -145,11 +155,10 @@ def expenses_over_time(user):
 
     labels = []
     data = []
-
+    
     for row in rows:
-        labels.append(row[0])
+        labels.append(row[0].strftime("%d-%m-%Y"))
         data.append(row[1])
-
     return [labels, data]
 
 def income_over_time(user):
@@ -167,7 +176,7 @@ def income_over_time(user):
     data = []
 
     for row in rows:
-        labels.append(row[0])
+        labels.append(row[0].strftime("%d-%m-%Y"))
         data.append(row[1])
 
     return [labels, data]

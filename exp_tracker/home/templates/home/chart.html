@@ -8,21 +8,27 @@
   <style>
     .graphs{
         width: 600px;
+        height: 300px;
+        display: flex;
+    }
+    #myChart, #myChart1{
+      margin: 20px;
     }
   </style>
 </head>
 <body>
   <div class="graphs">
-    <canvas id="myChart" style="width: 400px; height: 200px;"></canvas>
+    <canvas id="myChart" style="width: 200px; height: 100px;"></canvas>
+    <canvas id="myChart1" style="width: 400px; height: 200px;"></canvas>
   </div>
   <script>
     const ctx = document.getElementById('myChart').getContext('2d');
-    
+    const ctx1 = document.getElementById('myChart1').getContext('2d');
     // Combine bar and pie chart data and configuration
     const data = {
       labels: ['Balance','Expenses', 'Income'],
       datasets: [{
-        label: '',
+        label: 'pie',
         data: [{{profile_balance}},{{profile_expense}}, {{profile_income}}],
         backgroundColor: ['rgba(255, 125, 99)','rgba(255, 99, 132)', 'rgba(54, 162, 235)'],
      
@@ -39,7 +45,7 @@
       plugins: {
         legend: {
           display: true,
-          position: 'right'
+          position: 'bottom'
         }
       }
     };
@@ -49,6 +55,72 @@
       data,
       options
     });
+    
+
+
+    const final_dates = [{% for date in final_dates %} '{{date}}', {% endfor %} ];
+
+    const expenseData = [];
+    const incomeData = [];
+    const expense_dates = [{% for expense in expense_dates %} '{{expense}}', {% endfor %} ];
+    const income_dates = [{% for income in income_dates %} '{{income}}', {% endfor %} ];
+    const Expenses = [{% for expense in Expenses %} '{{expense}}', {% endfor %} ];
+    const Incomes = [{% for income in Incomes %} '{{income}}', {% endfor %} ];
+    // Align expense and income data with final_dates
+    final_dates.forEach(date => {
+      const expenseIndex = expense_dates.indexOf(date);
+      const incomeIndex = income_dates.indexOf(date);
+      
+      if (expenseIndex !== -1) {
+        expenseData.push(Expenses[expenseIndex]);
+      } else {
+        expenseData.push(0); // No expense for this date
+      }
+
+      if (incomeIndex !== -1) {
+        incomeData.push(Incomes[incomeIndex]);
+      } else {
+        incomeData.push(0); // No income for this date
+      }
+    });
+
+    const myChart1 = new Chart(ctx1, {
+      type: 'bar',
+      data: {
+        labels: final_dates,
+        datasets: [{
+          label: 'Expenses',
+          backgroundColor: 'rgba(255, 99, 132, 0.5)',
+          borderColor: 'rgba(255, 99, 132, 1)',
+          borderWidth: 2,
+          data: expenseData
+        }, {
+          label: 'Income',
+          backgroundColor: 'rgba(54, 162, 235, 0.5)',
+          borderColor: 'rgba(54, 162, 235, 1)',
+          borderWidth: 2,
+          data: incomeData
+        }]
+      },
+      options: {
+        scales: {
+          x: {
+            stacked: true
+          },
+          y: {
+            stacked: true,
+            beginAtZero: true
+          }
+        },
+        plugins: {
+          legend: {
+            display: true,
+            position: 'bottom'
+          }
+        }
+      }
+    });
+
   </script>
   
 </body>
