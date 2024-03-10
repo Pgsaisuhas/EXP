@@ -6,13 +6,28 @@
   <title>Analytics</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
+    @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");
     .graphs{
         width: 600px;
         height: 300px;
         display: flex;
     }
+
     #myChart, #myChart1{
       margin: 20px;
+    }
+
+    .goback {
+      text-align: center;
+      padding: 20px;
+      border-radius: 10px;
+      background-color: #007bff;
+      width: 100px;
+      margin: 50px;
+    }
+    a{
+      text-decoration: none;
+      color: #fff;
     }
   </style>
 </head>
@@ -122,6 +137,8 @@
     });
 
   </script>
-  
+  <div class="goback">
+    <a href="/home/">Go Back</a>
+  </div>
 </body>
 </html>
